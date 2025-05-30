@@ -34,8 +34,6 @@ Untuk mencapai tujuan tersebut, dua pendekatan sistem rekomendasi akan digunakan
 
 Pendekatan ini dipilih agar sistem rekomendasi dapat menangani berbagai kondisi, misalnya produk baru (CBF) dan pola preferensi pengguna yang kompleks (CF).
 
-Paham banget! Saya susun ulang **Data Understanding** ini dengan format narasi laporan yang rapi dan terstruktur sesuai ketentuan rubrik kamu, sekaligus tetap sesuai dengan pengerjaan di Colab kamu. Jadi kamu tinggal copy-paste dan tinggal sesuaikan minor jika perlu.
-
 ## Data Understanding
 
 Dataset yang digunakan dalam proyek ini adalah **Amazon Fine Food Reviews** yang diperoleh dari Kaggle ([link dataset](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews)). Dataset ini berisi **568.454** baris dan **10** kolom yang mencakup informasi lengkap mengenai ulasan produk makanan di Amazon.
