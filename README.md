@@ -271,6 +271,102 @@ Tahapan data preparation dilakukan secara berurutan sebagai berikut:
     latest_date = df['ReviewTime'].max()  
     df['ReviewAgeDays'] = (latest_date - df['ReviewTime']).dt.days
     ```
+    
+## Modeling and Result
+
+Tahap ini membangun dan membandingkan dua sistem rekomendasi: **Content-Based Filtering (CBF)** dan **Collaborative Filtering (CF)**. Masing-masing digunakan untuk merekomendasikan produk makanan dari dataset Amazon Fine Food Reviews berdasarkan pendekatan dan data yang berbeda.
+
+### Content-Based Filtering (CBF)
+
+CBF merekomendasikan produk berdasarkan **konten ulasan yang ditulis pengguna**. Model dilatih menggunakan representasi teks hasil **TF-IDF**, direduksi menggunakan **SVD**, dan diseimbangkan dengan **Random Oversampling**. Model yang digunakan adalah **Logistic Regression**.
+
+* **Langkah-langkah:**
+
+  * Preprocessing teks ulasan.
+  * Ekstraksi fitur menggunakan TF-IDF (3000 fitur).
+  * Reduksi dimensi dengan Truncated SVD (150 komponen).
+  * Oversampling untuk menangani ketidakseimbangan kelas `ScoreHigh`.
+  * Pelatihan model Logistic Regression.
+  * Prediksi label dan probabilitas `ScoreHigh` untuk semua ulasan.
+
+* **Evaluasi Model:**
+
+  ```
+  Accuracy: 0.82
+  Precision: 0.95 (positif), 0.55 (negatif)
+  Recall: 0.81 (positif), 0.84 (negatif)
+  F1-score: 0.87 (positif), 0.67 (negatif)
+  ```
+
+  Model mencapai **akurasi 81.7%** dengan **F1-score 87%** untuk ulasan dengan skor tinggi (positif).
+
+* **Contoh Output Rekomendasi Top-N (Top-10):**
+
+  | ProductId  | Skor Prediksi | Sentimen |
+  | ---------- | ------------- | -------- |
+  | B007JFMH8M | 1.000000      | 0.630    |
+  | B000SARJO2 | 1.000000      | 0.797    |
+  | B002GOYT1O | 1.000000      | 0.632    |
+  | ...        | ...           | ...      |
+
+* **Kelebihan:**
+
+  * Dapat memberikan rekomendasi personal dari teks yang ditulis pengguna.
+  * Tidak membutuhkan data dari pengguna lain.
+
+* **Kekurangan:**
+
+  * Rentan terhadap kualitas teks ulasan.
+  * Tidak mempertimbangkan interaksi antar pengguna.
+
+### Collaborative Filtering (CF)
+
+Pendekatan ini menggunakan data interaksi pengguna–produk (user-item) dengan algoritma **Matrix Factorization (SVD)** dari pustaka Surprise. Model mempelajari pola rating untuk memberikan prediksi terhadap produk yang belum diberi ulasan oleh pengguna.
+
+* **Langkah-langkah:**
+
+  * Format data `UserId`, `ProductId`, dan `Score`.
+  * Bangun dataset untuk pustaka Surprise.
+  * Latih model SVD pada seluruh dataset.
+  * Evaluasi performa menggunakan validasi silang (3-fold).
+
+* **Evaluasi Model (3-Fold Cross Validation):**
+
+  ```
+  RMSE: 1.1097
+  MAE: 0.8227
+  ```
+
+  RMSE dan MAE menunjukkan **kesalahan rata-rata prediksi skor ulasan**, dengan nilai yang cukup baik untuk data real-world.
+
+* **Contoh Rekomendasi Produk (Top-5 untuk User A3OXHLG6DIBRW8):**
+
+  | ProductId  | Skor Prediksi |
+  | ---------- | ------------- |
+  | B0019CW0HE | 5.0           |
+  | B0037LW78C | 5.0           |
+  | B002N2XXUC | 5.0           |
+  | B000WNJ73Q | 5.0           |
+  | B00061NJ06 | 5.0           |
+
+* **Kelebihan:**
+
+  * Mampu menangkap pola kesukaan tersembunyi dari pengguna lain.
+  * Relevan untuk produk tanpa teks ulasan.
+
+* **Kekurangan:**
+
+  * Masalah *cold-start* jika pengguna atau produk baru.
+  * Kinerja dipengaruhi sparsity matriks user-item.
+
+### Kesimpulan Modeling
+
+| Pendekatan | Input Utama    | Output         | Kelebihan                           | Kekurangan                                   |
+| ---------- | -------------- | -------------- | ----------------------------------- | -------------------------------------------- |
+| CBF        | Teks ulasan    | Prediksi label | Cocok untuk user baru dengan ulasan | Sensitif pada kualitas teks                  |
+| CF         | User-Item Skor | Prediksi skor  | Menangkap preferensi kolektif       | Tidak cocok untuk pengguna baru (cold start) |
+
+Kedua model berhasil membentuk **Top-N Recommendation** yang dapat digunakan sesuai konteks pengguna dan data yang tersedia.
 
 ## Evaluation
 
