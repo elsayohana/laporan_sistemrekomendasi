@@ -13,3 +13,24 @@ Referensi:
 * [Amazon Fine Food Reviews - Kaggle](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews)
 * Kotler, P., Keller, K. L., et al. (2021). *Marketing Management*.
 
+## **Business Understanding**
+
+### Problem Statement
+
+Pengguna e-commerce sering mengalami kesulitan dalam menemukan produk makanan yang sesuai dengan preferensi mereka karena banyaknya pilihan dan variasi produk. Hal ini dapat menyebabkan ketidakpuasan pelanggan dan menurunnya penjualan.
+
+### Goals
+
+* Membangun sistem rekomendasi yang mampu memberikan rekomendasi produk makanan sesuai preferensi pengguna.
+* Mengurangi beban pengguna dalam memilih produk dengan menampilkan rekomendasi yang relevan dan personal.
+* Meningkatkan kepuasan pelanggan dan potensi peningkatan penjualan di platform e-commerce.
+
+### Solution Approach
+
+Untuk mencapai tujuan tersebut, dua pendekatan sistem rekomendasi akan digunakan:
+
+1. **Content-Based Filtering (CBF):** Menggunakan fitur teks ulasan untuk merekomendasikan produk berdasarkan kemiripan konten dengan produk yang sudah disukai pengguna.
+2. **Collaborative Filtering (CF):** Memanfaatkan interaksi pengguna (rating) untuk memberikan rekomendasi berdasarkan preferensi pengguna lain yang serupa.
+
+Pendekatan ini dipilih agar sistem rekomendasi dapat menangani berbagai kondisi, misalnya produk baru (CBF) dan pola preferensi pengguna yang kompleks (CF).
+
