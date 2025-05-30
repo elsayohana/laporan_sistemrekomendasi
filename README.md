@@ -39,34 +39,6 @@ Pendekatan ini dipilih agar sistem rekomendasi dapat menangani berbagai kondisi,
 
 ## Data Understanding
 
-Dataset yang digunakan dalam proyek ini adalah **Amazon Fine Food Reviews** yang diperoleh dari Kaggle ([link dataset](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews)). Dataset ini berisi **568.454** baris dan **10** kolom yang mencakup informasi lengkap mengenai ulasan produk makanan di Amazon.
-
-### Deskripsi Data
-
-Setiap baris pada dataset merepresentasikan sebuah ulasan yang mencakup fitur-fitur seperti:
-
-* **UserId** dan **ProductId** sebagai identitas unik pengguna dan produk, dengan total 256.059 pengguna dan 74.258 produk yang berbeda.
-* **ProfileName** dan **Summary** yang berisi nama pengguna dan ringkasan ulasan dalam bentuk teks, meskipun terdapat sedikit nilai yang hilang (masing-masing 26 dan 27 missing values).
-* **HelpfulnessNumerator** dan **HelpfulnessDenominator** yang menunjukkan jumlah vote pengguna lain terkait seberapa membantu ulasan tersebut.
-* **Score** adalah rating ulasan dengan skala 1 hingga 5, yang menunjukkan tingkat kepuasan pengguna.
-* **Text** berisi isi lengkap dari ulasan dalam bentuk teks.
-* **Time** merepresentasikan waktu ulasan dalam format UNIX timestamp, yang diubah menjadi tanggal agar dapat dianalisis tren waktunya.
-
-### Insight dari Data
-
-* **Distribusi Skor**: Rata-rata skor ulasan adalah 4.18 dengan mayoritas ulasan memberikan nilai tinggi (4 dan 5), menunjukkan ulasan positif mendominasi. Namun, distribusi ini bersifat tidak seimbang (skewed), sehingga perlu diwaspadai agar model tidak bias terhadap kelas mayoritas.
-* **Panjang Teks Ulasan** sangat bervariasi, dengan rata-rata sekitar 436 karakter dan adanya beberapa ulasan sangat panjang (hingga lebih dari 21 ribu karakter), yang perlu diperhatikan dalam tahap pemrosesan teks.
-* **Helpfulness**: Terdapat korelasi sangat tinggi (0.97) antara kolom numerator dan denominator helpfulness, yang menunjukkan kedua fitur ini sangat berkaitan dan dapat mempengaruhi pemodelan jika digunakan bersamaan.
-* **Waktu Ulasan** tersebar dari tahun 1999 sampai 2012, memungkinkan analisis tren perubahan ulasan selama waktu yang cukup panjang.
-* **Missing Values** pada kolom `ProfileName` dan `Summary` sangat sedikit (26-27 baris) sehingga tidak signifikan dan mudah ditangani dalam proses pembersihan data.
-* **Data Duplikat**: Tidak ditemukan data duplikat dalam dataset, menandakan data sudah bersih dan siap untuk tahap analisis dan modeling.
-
-### Kesimpulan
-
-Dataset ini cukup besar dan lengkap, dengan berbagai tipe data numerik dan teks yang memungkinkan penerapan berbagai teknik analisis, seperti content-based filtering menggunakan fitur teks, serta collaborative filtering berdasarkan interaksi pengguna-produk. Kondisi data yang bersih dan beragam juga mendukung pengembangan sistem rekomendasi yang akurat dan relevan.
-
-## Data Understanding
-
 ### 1. Informasi Dataset
 
 Dataset **Amazon Fine Food Reviews** berisi **568.454 baris** dan **10 kolom** yang merepresentasikan ulasan produk makanan di Amazon. Data ini sangat kaya dengan informasi seperti ID produk, ID pengguna, nama profil, skor ulasan, waktu ulasan, dan isi ulasan.
