@@ -125,6 +125,149 @@ Terdapat korelasi sangat tinggi antara `HelpfulnessNumerator` dan `HelpfulnessDe
 * Rentang waktu ulasan cukup panjang, dari Oktober 1999 hingga Oktober 2012, memungkinkan analisis tren waktu.
 * Mayoritas produk mendapat skor review 5, dengan skewness positif pada distribusi skor.
 
+## Data Preparation
+
+Tahapan data preparation dilakukan secara berurutan sebagai berikut:
+
+1. **Penanganan Missing Values dan Duplikat**
+   Data yang memiliki nilai kosong pada kolom `Summary` dan `ProfileName` diisi dengan string kosong menggunakan `.fillna()`. Selanjutnya, data duplikat dihapus dengan `.drop_duplicates()` untuk memastikan data unik dan berkualitas.
+   *Kode:*
+
+   ```python
+   df = df.fillna({'Summary': '', 'ProfileName': ''})  
+   df = df.drop_duplicates()
+   ```
+
+2. **Konversi Timestamp ke Format Tanggal**
+   Kolom `Time` yang berupa UNIX timestamp dikonversi menjadi tipe datetime dengan `pd.to_datetime()`. Selain itu, fitur tahun dan bulan ulasan juga ditambahkan untuk analisis tren dan sebagai fitur tambahan pada model.
+   *Kode:*
+
+   ```python
+   df['ReviewTime'] = pd.to_datetime(df['Time'], unit='s')  
+   df['ReviewYear'] = df['ReviewTime'].dt.year  
+   df['ReviewMonth'] = df['ReviewTime'].dt.month
+   ```
+
+3. **Penambahan Fitur Panjang Teks Review**
+   Panjang ulasan dalam karakter dihitung dan disimpan di kolom baru `TextLength`. Fitur ini berguna untuk mengetahui variasi detail ulasan yang bisa mempengaruhi analisis teks.
+   *Kode:*
+
+   ```python
+   df['TextLength'] = df['Text'].apply(lambda x: len(str(x)))
+   ```
+
+4. **Pembersihan Teks dan Penggabungan Kolom Summary dan Text**
+   Teks pada kolom `Summary` dan `Text` digabung menjadi satu kolom `Content`. Kemudian, teks dibersihkan dengan menghilangkan tanda baca, mengubah ke huruf kecil, dan menghapus stopwords menggunakan fungsi `clean_text`.
+   *Kode:*
+
+   ```python
+   def clean_text(text):
+       text = re.sub(r'[^\w\s]', '', str(text).lower())  
+       return ' '.join([word for word in text.split() if word not in stop_words])  
+
+   df['Content'] = (df['Summary'] + ' ' + df['Text']).apply(clean_text)
+   ```
+
+5. **Pembuatan Label Biner untuk Klasifikasi**
+   Skor ulasan diubah menjadi label biner `ScoreHigh`, dimana skor 4 dan 5 diberi label 1 (positif), sedangkan skor 1-3 diberi label 0. Ini mempermudah model klasifikasi untuk mendeteksi ulasan positif atau negatif.
+   *Kode:*
+
+   ```python
+   df['ScoreHigh'] = df['Score'].apply(lambda x: 1 if x >= 4 else 0)
+   ```
+
+6. **Persiapan Dataset untuk Content-Based Filtering (CBF)**
+   Dataset CBF dibuat dengan fitur teks `Content` dan label `ScoreHigh`. Data dibagi menjadi train dan test menggunakan `train_test_split` untuk evaluasi model.
+   *Kode:*
+
+   ```python
+   cbf_df = df[['UserId', 'ProductId', 'Content', 'ScoreHigh']].copy()  
+   X = cbf_df['Content']  
+   y = cbf_df['ScoreHigh']  
+   X_train, X_test, y_train, y_test = sklearn_train_test_split(X, y, test_size=0.2, random_state=42)
+   ```
+
+7. **Persiapan Dataset untuk Collaborative Filtering (CF)**
+   Dataset CF hanya menggunakan `UserId`, `ProductId`, dan `Score` untuk membangun interaksi pengguna-produk.
+   *Kode:*
+
+   ```python
+   cf_df = df[['UserId', 'ProductId', 'Score']].copy()
+   ```
+
+8. **Encoding UserId dan ProductId ke ID Numerik**
+   User dan produk dikonversi menjadi ID numerik menggunakan `LabelEncoder` untuk digunakan pada matriks user-item.
+   *Kode:*
+
+   ```python
+   user_enc = LabelEncoder()  
+   product_enc = LabelEncoder()  
+   cf_df['user_idx'] = user_enc.fit_transform(cf_df['UserId'])  
+   cf_df['product_idx'] = product_enc.fit_transform(cf_df['ProductId'])
+   ```
+
+9. **Pembuatan Matriks User-Item untuk CF**
+   Matriks sparse dibuat dengan data interaksi skor untuk CF. Matriks ini digunakan dalam algoritma rekomendasi berbasis user-item.
+   *Kode:*
+
+   ```python
+   train_sparse_matrix = csr_matrix((cf_df['Score'], (cf_df['user_idx'], cf_df['product_idx'])))
+   ```
+
+10. **Pra-pemrosesan Teks pada CBF**
+    Teks di kolom `Content` dibersihkan lebih lanjut dengan lemmatization dan penghapusan stopwords agar representasi teks lebih efektif untuk model.
+    *Kode:*
+
+    ```python
+    def preprocess_text(text):
+        text = text.lower()
+        text = re.sub(r'[^a-z\s]', '', text)
+        tokens = text.split()
+        tokens = [lemmatizer.lemmatize(word) for word in tokens if word not in stop_words]
+        return ' '.join(tokens)
+    df['Content_clean'] = df['Content'].apply(preprocess_text)
+    ```
+
+11. **Vectorisasi, Reduksi Dimensi, dan Penyeimbangan Data**
+    Teks diubah menjadi fitur numerik dengan TF-IDF, kemudian dikurangi dimensinya dengan SVD. Oversampling dilakukan untuk mengatasi ketidakseimbangan kelas pada label biner.
+    *Kode:*
+
+    ```python
+    tfidf = TfidfVectorizer(max_features=3000)  
+    X_vec = tfidf.fit_transform(df['Content_clean'])  
+    svd = TruncatedSVD(n_components=150, random_state=42)  
+    X_svd = svd.fit_transform(X_vec)  
+    ros = RandomOverSampler(random_state=42)  
+    X_resampled, y_resampled = ros.fit_resample(X_svd, df['ScoreHigh'])
+    ```
+
+12. **Feature Engineering Tambahan**
+    Ditambahkan fitur sentiment polarity menggunakan TextBlob untuk meningkatkan kualitas fitur teks dan analisis sentimen.
+    *Kode:*
+
+    ```python
+    df['Sentiment'] = df['Text'].apply(lambda x: TextBlob(str(x)).sentiment.polarity)
+    ```
+
+13. **Filter User dan Produk dengan Data Sedikit**
+    User dan produk dengan kurang dari 5 review difilter agar model lebih stabil dan tidak terpengaruh noise.
+    *Kode:*
+
+    ```python
+    user_counts = df['UserId'].value_counts()  
+    product_counts = df['ProductId'].value_counts()  
+    filtered_df = df[df['UserId'].isin(user_counts[user_counts >= 5].index) &  
+                     df['ProductId'].isin(product_counts[product_counts >= 5].index)]
+    ```
+
+14. **Penggunaan Fitur Waktu sebagai Fitur Tambahan**
+    Fitur umur ulasan dalam hari dihitung dari tanggal review terbaru, untuk menangkap aspek temporal dalam model rekomendasi.
+    *Kode:*
+
+    ```python
+    latest_date = df['ReviewTime'].max()  
+    df['ReviewAgeDays'] = (latest_date - df['ReviewTime']).dt.days
+    ```
 
 
 
