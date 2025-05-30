@@ -1,3 +1,6 @@
+# **Penerapan Content-Based Filtering dan Collaborative Filtering pada Sistem Rekomendasi Ulasan Makanan (Studi Kasus: Amazon Fine Food Reviews)**
+*Elsa Yohana Sinaga*
+
 ## **Project Overview**
 
 Permasalahan utama dalam e-commerce adalah membantu pengguna menemukan produk yang sesuai dengan preferensi mereka di antara ribuan pilihan. Untuk itu, sistem rekomendasi menjadi solusi penting dalam meningkatkan pengalaman pengguna dan mendorong penjualan.
@@ -268,6 +271,68 @@ Tahapan data preparation dilakukan secara berurutan sebagai berikut:
     latest_date = df['ReviewTime'].max()  
     df['ReviewAgeDays'] = (latest_date - df['ReviewTime']).dt.days
     ```
+
+## Evaluation
+
+Tahap evaluasi digunakan untuk mengukur performa model rekomendasi berdasarkan metrik yang relevan terhadap tujuan proyek. Proyek ini menggunakan pendekatan klasifikasi untuk Content-Based Filtering (CBF) dan prediksi rating untuk Collaborative Filtering (CF), sehingga digunakan metrik evaluasi yang sesuai dengan masing-masing pendekatan.
+
+### Metrik Evaluasi yang Digunakan
+
+#### 1. Accuracy
+
+Accuracy mengukur seberapa besar proporsi prediksi yang benar dibandingkan dengan seluruh prediksi yang dibuat. Cocok digunakan ketika distribusi kelas tidak terlalu timpang.
+**Rumus:**
+
+$$
+\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
+$$
+
+#### 2. Precision, Recall, dan F1-Score
+
+Ketiga metrik ini digunakan untuk mengevaluasi performa model klasifikasi, terutama ketika distribusi label tidak seimbang.
+
+* **Precision**: Proporsi prediksi positif yang benar.
+
+  $$
+  \text{Precision} = \frac{TP}{TP + FP}
+  $$
+
+* **Recall**: Proporsi data positif yang berhasil dikenali oleh model.
+
+  $$
+  \text{Recall} = \frac{TP}{TP + FN}
+  $$
+
+* **F1-Score**: Harmonic mean antara precision dan recall, berguna saat diperlukan keseimbangan antara keduanya.
+
+  $$
+  \text{F1-Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+  $$
+
+#### 3. Root Mean Squared Error (RMSE) – untuk Collaborative Filtering
+
+RMSE digunakan untuk mengukur seberapa besar rata-rata kesalahan antara rating prediksi dan rating sebenarnya pada model CF.
+**Rumus:**
+
+$$
+RMSE = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (\hat{y}_i - y_i)^2}
+$$
+
+### Hasil Evaluasi
+
+* **Content-Based Filtering (CBF)**:
+
+  * Accuracy: **85%**
+  * F1-Score: **0.83**
+  * Precision dan recall dalam kategori seimbang
+  * Interpretasi: model mampu membedakan ulasan positif dan negatif dengan baik serta memberikan rekomendasi yang sesuai dengan konten ulasan.
+
+* **Collaborative Filtering (CF)**:
+
+  * RMSE: **0.95**
+  * Interpretasi: model CF cukup akurat dalam memprediksi rating pengguna terhadap produk, menunjukkan performa yang memadai untuk merekomendasikan produk berdasarkan interaksi pengguna sebelumnya.
+
+Metrik evaluasi yang digunakan telah disesuaikan dengan pendekatan model yang diterapkan. Untuk CBF digunakan metrik klasifikasi, sedangkan untuk CF digunakan metrik prediktif (RMSE), sesuai dengan karakteristik dan tujuan dari masing-masing model.
 
 
 
