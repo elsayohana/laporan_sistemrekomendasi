@@ -359,16 +359,19 @@ $$
 Metrik ini digunakan pada model klasifikasi (CBF), terutama saat label tidak seimbang:
 
 - **Precision**: Proporsi prediksi positif yang benar.  
+
   $$
   \text{Precision} = \frac{TP}{TP + FP}
   $$
 
 - **Recall**: Proporsi data positif yang berhasil dikenali oleh model.  
+
   $$
   \text{Recall} = \frac{TP}{TP + FN}
   $$
 
-- **F1-Score**: Rata-rata harmonis dari precision dan recall.  
+- **F1-Score**: Rata-rata harmonis dari precision dan recall.
+  
   $$
   \text{F1-Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
   $$
