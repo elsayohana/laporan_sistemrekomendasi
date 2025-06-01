@@ -340,16 +340,15 @@ Pendekatan ini menggunakan data interaksi pengguna–produk (user-item) dengan a
 
 Kedua model berhasil membentuk **Top-N Recommendation** yang dapat digunakan sesuai konteks pengguna dan data yang tersedia.
 
-## Evaluation
+## 📊 Evaluation
 
-Tahap evaluasi digunakan untuk mengukur performa model rekomendasi berdasarkan metrik yang relevan terhadap tujuan proyek. Proyek ini menggunakan pendekatan klasifikasi untuk Content-Based Filtering (CBF) dan prediksi rating untuk Collaborative Filtering (CF), sehingga digunakan metrik evaluasi yang sesuai dengan masing-masing pendekatan.
+Tahap evaluasi digunakan untuk mengukur performa model rekomendasi berdasarkan metrik yang relevan terhadap tujuan proyek. Proyek ini menggunakan pendekatan klasifikasi untuk **Content-Based Filtering (CBF)** dan pendekatan prediksi rating untuk **Collaborative Filtering (CF)**. Oleh karena itu, metrik evaluasi yang digunakan disesuaikan dengan masing-masing pendekatan.
 
 ### Metrik Evaluasi yang Digunakan
 
 #### 1. Accuracy
 
-Accuracy mengukur seberapa besar proporsi prediksi yang benar dibandingkan dengan seluruh prediksi yang dibuat. Cocok digunakan ketika distribusi kelas tidak terlalu timpang.
-**Rumus:**
+Mengukur seberapa besar proporsi prediksi yang benar dibandingkan seluruh prediksi yang dibuat. Cocok digunakan saat distribusi kelas tidak terlalu timpang.
 
 $$
 \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
@@ -357,30 +356,26 @@ $$
 
 #### 2. Precision, Recall, dan F1-Score
 
-Ketiga metrik ini digunakan untuk mengevaluasi performa model klasifikasi, terutama ketika distribusi label tidak seimbang.
+Metrik ini digunakan pada model klasifikasi (CBF), terutama saat label tidak seimbang:
 
-* **Precision**: Proporsi prediksi positif yang benar.
-
+- **Precision**: Proporsi prediksi positif yang benar.  
   $$
   \text{Precision} = \frac{TP}{TP + FP}
   $$
 
-* **Recall**: Proporsi data positif yang berhasil dikenali oleh model.
-
+- **Recall**: Proporsi data positif yang berhasil dikenali oleh model.  
   $$
   \text{Recall} = \frac{TP}{TP + FN}
   $$
 
-* **F1-Score**: Harmonic mean antara precision dan recall.
-
+- **F1-Score**: Rata-rata harmonis dari precision dan recall.  
   $$
   \text{F1-Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
   $$
 
-#### 3. Root Mean Squared Error (RMSE) – untuk Collaborative Filtering
+#### 3. Root Mean Squared Error (RMSE)
 
-RMSE digunakan untuk mengukur rata-rata kesalahan kuadrat antara rating prediksi dan rating sebenarnya pada model CF.
-**Rumus:**
+Digunakan pada model prediktif seperti CF untuk mengukur seberapa besar kesalahan rata-rata antara prediksi dan nilai rating aktual.
 
 $$
 RMSE = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (\hat{y}_i - y_i)^2}
@@ -388,19 +383,22 @@ $$
 
 ### Hasil Evaluasi
 
-* **Content-Based Filtering (CBF)**:
+#### 🔹 Content-Based Filtering (CBF)
 
-  * **Accuracy**: **81.72%**
-  * **F1-Score (weighted avg)**: **0.83**
-  * **Precision (weighted avg)**: **0.86**
-  * **Recall (weighted avg)**: **0.82**
-  * **ROC AUC Score**: **0.91**
-  * **Interpretasi**: Model CBF mampu membedakan ulasan positif dan negatif dengan cukup baik. Dengan nilai F1-score dan ROC AUC yang tinggi, model memiliki keseimbangan baik antara presisi dan sensitivitas dalam klasifikasi.
+- **Accuracy**: `81.72%`
+- **F1-Score (weighted avg)**: `0.83`
+- **Precision (weighted avg)**: `0.86`
+- **Recall (weighted avg)**: `0.82`
+- **ROC AUC Score**: `0.91`
 
-* **Collaborative Filtering (CF)**:
+📌 *Interpretasi:*  
+Model CBF menunjukkan performa yang baik dalam mengklasifikasi ulasan positif dan negatif berdasarkan fitur konten. Nilai F1-score dan ROC AUC yang tinggi menunjukkan keseimbangan yang solid antara presisi dan sensitivitas.
 
-  * **RMSE**: **1.1094**
-  * **Interpretasi**: Model CF menunjukkan rata-rata error sekitar 1.1 poin dalam memprediksi rating pengguna terhadap produk. Nilai ini masih tergolong wajar mengingat skala rating yang digunakan (1–5), sehingga model tetap layak untuk memberikan rekomendasi berbasis preferensi pengguna.
+#### 🔹 Collaborative Filtering (CF)
 
-Metrik evaluasi yang digunakan telah disesuaikan dengan pendekatan masing-masing model. Untuk CBF digunakan metrik klasifikasi, sementara untuk CF digunakan metrik regresi (RMSE), sesuai dengan karakteristik dan tujuan sistem rekomendasi yang dibangun.
+- **RMSE**: `1.1094`
 
+📌 *Interpretasi:*  
+Model CF menghasilkan kesalahan rata-rata prediksi rating sebesar 1.1 poin. Dengan skala rating 1 hingga 5, nilai ini masih dapat diterima dan cukup akurat dalam merekomendasikan produk berdasarkan interaksi pengguna sebelumnya.
+
+Metrik evaluasi yang digunakan telah disesuaikan dengan pendekatan masing-masing model. CBF dievaluasi menggunakan metrik klasifikasi, sedangkan CF menggunakan metrik regresi (RMSE) sesuai dengan karakteristik dan tujuan sistem rekomendasi.
