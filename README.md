@@ -393,15 +393,11 @@ $$
 - **Precision (weighted avg)**: `0.86`
 - **Recall (weighted avg)**: `0.82`
 - **ROC AUC Score**: `0.91`
-
-*Interpretasi:*  
-Model CBF menunjukkan performa yang baik dalam mengklasifikasi ulasan positif dan negatif berdasarkan fitur konten. Nilai F1-score dan ROC AUC yang tinggi menunjukkan keseimbangan yang solid antara presisi dan sensitivitas.
+- *Interpretasi:*  Model CBF menunjukkan performa yang baik dalam mengklasifikasi ulasan positif dan negatif berdasarkan fitur konten. Nilai F1-score dan ROC AUC yang tinggi menunjukkan keseimbangan yang solid antara presisi dan sensitivitas.
 
 #### Collaborative Filtering (CF)
 
 - **RMSE**: `1.1094`
-
-*Interpretasi:*  
-Model CF menghasilkan kesalahan rata-rata prediksi rating sebesar 1.1 poin. Dengan skala rating 1 hingga 5, nilai ini masih dapat diterima dan cukup akurat dalam merekomendasikan produk berdasarkan interaksi pengguna sebelumnya.
+- *Interpretasi:*  Model CF menghasilkan kesalahan rata-rata prediksi rating sebesar 1.1 poin. Dengan skala rating 1 hingga 5, nilai ini masih dapat diterima dan cukup akurat dalam merekomendasikan produk berdasarkan interaksi pengguna sebelumnya.
 
 Metrik evaluasi yang digunakan telah disesuaikan dengan pendekatan masing-masing model. CBF dievaluasi menggunakan metrik klasifikasi, sedangkan CF menggunakan metrik regresi (RMSE) sesuai dengan karakteristik dan tujuan sistem rekomendasi.
