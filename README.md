@@ -340,7 +340,7 @@ Pendekatan ini menggunakan data interaksi pengguna–produk (user-item) dengan a
 
 Kedua model berhasil membentuk **Top-N Recommendation** yang dapat digunakan sesuai konteks pengguna dan data yang tersedia.
 
-## 📊 Evaluation
+## Evaluation
 
 Tahap evaluasi digunakan untuk mengukur performa model rekomendasi berdasarkan metrik yang relevan terhadap tujuan proyek. Proyek ini menggunakan pendekatan klasifikasi untuk **Content-Based Filtering (CBF)** dan pendekatan prediksi rating untuk **Collaborative Filtering (CF)**. Oleh karena itu, metrik evaluasi yang digunakan disesuaikan dengan masing-masing pendekatan.
 
@@ -386,7 +386,7 @@ $$
 
 ### Hasil Evaluasi
 
-#### 🔹 Content-Based Filtering (CBF)
+#### Content-Based Filtering (CBF)
 
 - **Accuracy**: `81.72%`
 - **F1-Score (weighted avg)**: `0.83`
@@ -394,14 +394,14 @@ $$
 - **Recall (weighted avg)**: `0.82`
 - **ROC AUC Score**: `0.91`
 
-📌 *Interpretasi:*  
+*Interpretasi:*  
 Model CBF menunjukkan performa yang baik dalam mengklasifikasi ulasan positif dan negatif berdasarkan fitur konten. Nilai F1-score dan ROC AUC yang tinggi menunjukkan keseimbangan yang solid antara presisi dan sensitivitas.
 
-#### 🔹 Collaborative Filtering (CF)
+#### Collaborative Filtering (CF)
 
 - **RMSE**: `1.1094`
 
-📌 *Interpretasi:*  
+*Interpretasi:*  
 Model CF menghasilkan kesalahan rata-rata prediksi rating sebesar 1.1 poin. Dengan skala rating 1 hingga 5, nilai ini masih dapat diterima dan cukup akurat dalam merekomendasikan produk berdasarkan interaksi pengguna sebelumnya.
 
 Metrik evaluasi yang digunakan telah disesuaikan dengan pendekatan masing-masing model. CBF dievaluasi menggunakan metrik klasifikasi, sedangkan CF menggunakan metrik regresi (RMSE) sesuai dengan karakteristik dan tujuan sistem rekomendasi.
